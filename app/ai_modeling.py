@@ -17,8 +17,14 @@ def save_binary_file(file_name, data):
 
 
 def generate(background_image_path, character_image_path):
+    # IMPORTANT: Your API key was leaked. Please go to your Google Cloud console
+    # and revoke this key immediately.
+    api_key = os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise ValueError("No GOOGLE_API_KEY set for Google API")
+
     client = genai.Client(
-        api_key="AIzaSyARSAZLOPRkpLMf7EiiuNHCpZeZDYwvbqY",
+        api_key=api_key,
     )
 
     model = "gemini-2.0-flash-preview-image-generation"

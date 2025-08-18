@@ -1,6 +1,9 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from dotenv import load_dotenv
 from .ai_modeling import generate
+
+load_dotenv()
 
 app = Flask(__name__, static_folder='../static')
 app.config['BACKGROUND_FOLDER'] = 'background'
