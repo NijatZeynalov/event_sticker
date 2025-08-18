@@ -1,9 +1,11 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from dotenv import load_dotenv
-from .ai_modeling import generate
+from ai_modeling import generate
 
-load_dotenv()
+# Construct the path to the .env file located in the parent directory
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=dotenv_path)
 
 app = Flask(__name__, static_folder='../static')
 app.config['BACKGROUND_FOLDER'] = 'background'
