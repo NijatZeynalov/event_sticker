@@ -1,0 +1,72 @@
+# To run this code you need to install the following dependencies:
+# pip install google-genai
+
+import base64
+import mimetypes
+import os
+from google import genai
+from google.genai import types
+
+
+def save_binary_file(file_name, data):
+    f = open(file_name, "wb")
+    f.write(data)
+    f.close()
+    print(f"File saved to to: {file_name}")
+    return file_name
+
+
+def generate(background_image_path, character_image_path):
+    client = genai.Client(
+        api_key="AIzaSyARSAZLOPRkpLMf7EiiuNHCpZeZDYwvbqY",
+    )
+
+    model = "gemini-2.0-flash-preview-image-generation"
+    with open(background_image_path, "rb") as f:
+        background_image_data = f.read()
+    with open(character_image_path, "rb") as f:
+        character_image_data = f.read()
+
+    contents = [
+        types.Content(
+            role="user",
+            parts=[
+                types.Part(inline_data=types.Blob(data=background_image_data, mime_type="image/png")),
+                types.Part(inline_data=types.Blob(data=character_image_data, mime_type="image/png")),
+                types.Part.from_text(text="""Use the first image as the background, and place the character from the second image in the middle of it. The final image should be in a classic Disney animation style with bold lines, fairy-tale aesthetics, and lively expressions."""),
+            ],
+        ),
+    ]
+    generate_content_config = types.GenerateContentConfig(
+        response_modalities=[
+            "IMAGE",
+            "TEXT",
+        ],
+    )
+
+    file_index = 0
+    for chunk in client.models.generate_content_stream(
+        model=model,
+        contents=contents,
+        config=generate_content_config,
+    ):
+        if (
+            chunk.candidates is None
+            or chunk.candidates[0].content is None
+            or chunk.candidates[0].content.parts is None
+        ):
+            continue
+        if chunk.candidates[0].content.parts[0].inline_data and chunk.candidates[0].content.parts[0].inline_data.data:
+            file_name = f"generated_image_{file_index}"
+            file_index += 1
+            inline_data = chunk.candidates[0].content.parts[0].inline_data
+            data_buffer = inline_data.data
+            file_extension = mimetypes.guess_extension(inline_data.mime_type)
+            filename_with_ext = f"{file_name}{file_extension}"
+            save_binary_file(f"generated/{filename_with_ext}", data_buffer)
+            return filename_with_ext
+        else:
+            print(chunk.text)
+
+if __name__ == "__main__":
+    generate("background/stage.png", "character/pikachu.png")
