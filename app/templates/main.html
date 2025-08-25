@@ -139,7 +139,7 @@
         <div class="controls" id="controlsPanel">
             <div class="control-group">
                 <label for="textInput">Mətn:</label>
-                <input type="text" id="textInput" value="HƏDİYYƏ SƏBƏTİ" placeholder="Mətninizi daxil edin">
+                <input type="text" id="textInput" value="{{ default_text }}" placeholder="Mətninizi daxil edin">
             </div>
 
             <div class="control-group">
@@ -177,7 +177,7 @@
         <div class="preview-container">
             <div class="circular-container" id="circularContainer">
                 <div class="circular-image" id="circularImage">
-                    <img id="previewImage" src="{{ url_for('generated_image', filename=generated_image) }}" alt="Hədiyyə Səbəti">
+                    <img id="previewImage" src="{{ url_for('generated_image', image_id=generated_image_id) }}" alt="Hədiyyə Səbəti">
                 </div>
 
                 <div class="text-overlay">
@@ -195,6 +195,7 @@
 
         <div style="text-align: center;">
             <button class="download-btn" onclick="downloadImage()">Stickeri çap et</button>
+            <button class="download-btn" onclick="window.location.href='{{ url_for('home') }}'">Yeni sticker yarat</button>
         </div>
     </div>
 
@@ -319,7 +320,7 @@
                 };
                 svgImage.src = url;
             };
-            mainImage.src = "{{ url_for('generated_image', filename=generated_image) }}";
+            mainImage.src = "{{ url_for('generated_image', image_id=generated_image_id) }}";
         }
 
         updateAll();

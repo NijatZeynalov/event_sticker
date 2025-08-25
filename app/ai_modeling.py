@@ -16,7 +16,7 @@ def save_binary_file(file_name, data):
     return file_name
 
 
-def generate(background_image_path, character_image_path):
+def generate(background_image_data, character_image_data):
     # IMPORTANT: Your API key was leaked. Please go to your Google Cloud console
     # and revoke this key immediately.
     api_key = os.environ.get("GOOGLE_API_KEY")
@@ -28,11 +28,7 @@ def generate(background_image_path, character_image_path):
     )
 
     model = "gemini-2.0-flash-preview-image-generation"
-    with open(background_image_path, "rb") as f:
-        background_image_data = f.read()
-    with open(character_image_path, "rb") as f:
-        character_image_data = f.read()
-
+    
     contents = [
         types.Content(
             role="user",
@@ -67,12 +63,13 @@ def generate(background_image_path, character_image_path):
             file_index += 1
             inline_data = chunk.candidates[0].content.parts[0].inline_data
             data_buffer = inline_data.data
-            file_extension = mimetypes.guess_extension(inline_data.mime_type)
-            filename_with_ext = f"{file_name}{file_extension}"
-            save_binary_file(f"generated/{filename_with_ext}", data_buffer)
-            return filename_with_ext
+            return data_buffer
         else:
             print(chunk.text)
 
 if __name__ == "__main__":
-    generate("background/stage.png", "character/pikachu.png")
+    with open("background/stage.png", "rb") as f:
+        background_data = f.read()
+    with open("character/pikachu.png", "rb") as f:
+        character_data = f.read()
+    generate(background_data, character_data)
