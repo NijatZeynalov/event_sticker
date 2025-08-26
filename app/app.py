@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 from io import BytesIO
 from flask import send_file
 from dotenv import load_dotenv
-from ai_modeling import generate
+from .ai_modeling import generate
 
 # Construct the path to the .env file located in the parent directory
 dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
