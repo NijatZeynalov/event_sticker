@@ -12,13 +12,14 @@ from ai_modeling import generate
 dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
-app = Flask(__name__, static_folder='../static')
-app.config['SECRET_KEY'] = 'supersecretkey'
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'supersecretkey')
 app.config['BACKGROUND_FOLDER'] = 'background'
 app.config['CHARACTER_FOLDER'] = 'character'
 app.config['GENERATED_FOLDER'] = 'generated'
 
-client = MongoClient('mongodb://localhost:27017/')
+MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+client = MongoClient(MONGO_URI)
 db = client.sticker
 
 login_manager = LoginManager()
@@ -132,7 +133,3 @@ def character_image(filename):
     user_id = db.users.find_one({'username': current_user.id})['_id']
     image_doc = db.images.find_one({'user_id': user_id, 'filename': filename, 'type': 'character'})
     return send_file(BytesIO(image_doc['data']), mimetype=image_doc['content_type'])
-
-if __name__ == '__main__':
-    os.makedirs(app.config['GENERATED_FOLDER'], exist_ok=True)
-    app.run(debug=True)
