@@ -4,8 +4,6 @@
 import base64
 import mimetypes
 import os
-from google import genai
-from google.genai import types
 
 
 def save_binary_file(file_name, data):
@@ -17,9 +15,17 @@ def save_binary_file(file_name, data):
 
 
 def generate(background_image_data, character_image_data):
+    # Import SDK in-function and support both packages: google-genai and google-generativeai
+    try:
+        from google import genai  # google-genai
+        from google.genai import types
+    except Exception:
+        import google.generativeai as genai  # google-generativeai
+        from google.generativeai import types
+
     # IMPORTANT: Your API key was leaked. Please go to your Google Cloud console
     # and revoke this key immediately.
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     if not api_key:
         raise ValueError("No GOOGLE_API_KEY set for Google API")
 
