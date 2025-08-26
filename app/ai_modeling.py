@@ -4,8 +4,8 @@
 import base64
 import mimetypes
 import os
-from google import genai
-from google.genai import types
+import google.generativeai as genai
+from google.generativeai import types
 
 
 def save_binary_file(file_name, data):
