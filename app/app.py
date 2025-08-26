@@ -12,7 +12,10 @@ from ai_modeling import generate
 dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
+from whitenoise import WhiteNoise
+
 app = Flask(__name__)
+app.wsgi_app = WhiteNoise(app.wsgi_app, root="app/static/")
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'supersecretkey')
 app.config['BACKGROUND_FOLDER'] = 'background'
 app.config['CHARACTER_FOLDER'] = 'character'
