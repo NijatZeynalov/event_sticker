@@ -5,8 +5,4 @@ Flask-Login==0.6.2
 pymongo==4.3.3
 gunicorn==20.1.0
 whitenoise==6.2.0
-<<<<<<< HEAD
 Werkzeug==2.3.6
-=======
-Werkzeug==2.3.6
->>>>>>> 7a16ecc1ef43918b6cba842a88e7a64d188b2eff
