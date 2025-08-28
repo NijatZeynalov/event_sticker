@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sticker Generator - Choose Character</title>
+    <title>Sticker Generator - Choose Subject</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -28,31 +28,24 @@
             color: #666;
             margin-bottom: 40px;
         }
-        .image-grid {
+        .subject-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
         }
-        .image-card {
+        .subject-card {
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
+            padding: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
-        .image-card:hover {
+        .subject-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.12);
         }
-        .image-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: contain;
-            display: block;
-        }
-        .image-card-title {
-            padding: 20px;
+        .subject-card-title {
             font-weight: 600;
             font-size: 1.2rem;
         }
@@ -74,17 +67,17 @@
 </head>
 <body>
     <div class="container">
-        <a href="{{ url_for('home') }}" class="back-btn">&larr; Go Back</a>
-        <h1>Step 2: Choose a Character</h1>
-        <p>Now, pick a character to star in your sticker.</p>
-        <div class="image-grid">
-            {% for character in characters %}
-                <div class="image-card" onclick="document.getElementById('form-{{ character }}').submit();">
-                    <img src="{{ url_for('character_image', filename=character) }}" alt="{{ character }}">
-                    <div class="image-card-title">{{ character.split('.')[0]|replace('_', ' ')|title }}</div>
-                    <form id="form-{{ character }}" action="{{ url_for('subject') }}" method="get" style="display: none;">
+        <a href="{{ url_for('characters', background=background) }}" class="back-btn">&larr; Go Back</a>
+        <h1>Step 3: Choose a Subject</h1>
+        <p>Select a subject for your sticker.</p>
+        <div class="subject-grid">
+            {% for subject in subjects %}
+                <div class="subject-card" onclick="document.getElementById('form-{{ subject }}').submit();">
+                    <div class="subject-card-title">{{ subject }}</div>
+                    <form id="form-{{ subject }}" action="{{ url_for('style') }}" method="get" style="display: none;">
                         <input type="hidden" name="background" value="{{ background }}">
                         <input type="hidden" name="character" value="{{ character }}">
+                        <input type="hidden" name="subject" value="{{ subject }}">
                     </form>
                 </div>
             {% endfor %}

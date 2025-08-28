@@ -320,7 +320,9 @@
         window.onload = function() {
             var background = "{{ background }}";
             var character = "{{ character }}";
-            var url = "/process_image?background=" + background + "&character=" + character;
+            var subject = "{{ subject }}";
+            var style = "{{ style }}";
+            var url = "/process_image?background=" + background + "&character=" + character + "&subject=" + subject + "&style=" + style;
             window.location.href = url;
         };
     </script>

@@ -14,7 +14,7 @@ def save_binary_file(file_name, data):
     return file_name
 
 
-def generate(background_image_data, character_image_data):
+def generate(background_image_data, character_image_data, subject, style):
     # Import SDK in-function and support both packages: google-genai and google-generativeai
     try:
         from google import genai  # google-genai
@@ -25,7 +25,8 @@ def generate(background_image_data, character_image_data):
 
     # IMPORTANT: Your API key was leaked. Please go to your Google Cloud console
     # and revoke this key immediately.
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    api_key = 'AIzaSyARSAZLOPRkpLMf7EiiuNHCpZeZDYwvbqY'
+
     if not api_key:
         raise ValueError("No GOOGLE_API_KEY set for Google API")
 
@@ -34,6 +35,16 @@ def generate(background_image_data, character_image_data):
     )
 
     model = "gemini-2.0-flash-preview-image-generation"
+
+    style_prompts = {
+        "ghibli": "the Ghibli style, painterly anime look, soft watercolor textures, lush natural environments, emotionally expressive characters with large eyes, subtle magical realism, nostalgic atmosphere, warm lighting, gentle brushwork.",
+        "Muppet Realistic Style": "Muppet realistic style, 3D photo-realistic puppet look, visible stitching and felt fuzz, soft fabric textures, googly eyes, yarn hair, handmade materials under cinematic lighting, playful and exaggerated puppet expressions.",
+        "Pixar 3D": "charming 3D animated style, clean, stylized character designs with expressive yet subtle facial animation, cinematic warm lighting, beautifully composed shots, high-quality polished textures, and a heartwarming tone. Emphasize storytelling through posture, expression, and framing.",
+        "disney classic": "mid-century fairytale animation style, 2D cel animation with big expressive eyes, soft hand-painted backgrounds, gentle color gradients, magical lighting, graceful character poses, and a nostalgic storybook tone inspired by the golden age of animated films.",
+        "Lego Style": "the Lego style, made entirely of plastic bricks, blocky shapes, visible stud textures, modular construction, bright primary colors, characters with iconic Lego faces and claw hands, 3D toy-like rendering."
+    }
+
+    style_prompt = style_prompts.get(style, "a classic Disney animation style with bold lines, fairy-tale aesthetics, and lively expressions")
     
     contents = [
         types.Content(
@@ -41,7 +52,7 @@ def generate(background_image_data, character_image_data):
             parts=[
                 types.Part(inline_data=types.Blob(data=background_image_data, mime_type="image/png")),
                 types.Part(inline_data=types.Blob(data=character_image_data, mime_type="image/png")),
-                types.Part.from_text(text="""Use the first image as the background, and place the character from the second image in the middle of it. The final image should be in a classic Disney animation style with bold lines, fairy-tale aesthetics, and lively expressions."""),
+                types.Part.from_text(text=f"""Use the first image as the background, and place the character from the second image in the middle of it. The final image should be in {style_prompt}, with a {subject} theme."""),
             ],
         ),
     ]
@@ -78,4 +89,4 @@ if __name__ == "__main__":
         background_data = f.read()
     with open("character/pikachu.png", "rb") as f:
         character_data = f.read()
-    generate(background_data, character_data)
+    generate(background_data, character_data, "Sci-Fi", "ghibli")

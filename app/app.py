@@ -21,7 +21,8 @@ app.config['BACKGROUND_FOLDER'] = 'background'
 app.config['CHARACTER_FOLDER'] = 'character'
 app.config['GENERATED_FOLDER'] = 'generated'
 
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+MONGO_URI='mongodb+srv://nijatzeynalov:Az6IfycMLZI8XubU@stickers.hgtfcj7.mongodb.net/?retryWrites=true&w=majority&appName=stickers'
+
 client = MongoClient(MONGO_URI)
 db = client.sticker
 
@@ -77,22 +78,43 @@ def characters():
     characters = db.images.find({'user_id': user_id, 'type': 'character'})
     return render_template('characters.html', characters=[char['filename'] for char in characters], background=request.args.get('background'))
 
+@app.route('/subject')
+@login_required
+def subject():
+    background = request.args.get('background')
+    character = request.args.get('character')
+    subjects = ["Technology", "Sport", "Sci-Fi", "Abstract", "Nature", "Animals", "Food", "Travel"]
+    return render_template('subject.html', background=background, character=character, subjects=subjects)
+
+@app.route('/style')
+@login_required
+def style():
+    background = request.args.get('background')
+    character = request.args.get('character')
+    subject = request.args.get('subject')
+    styles = ["ghibli", "Muppet Realistic Style", "Pixar 3D", "disney classic", "Lego Style"]
+    return render_template('style.html', background=background, character=character, subject=subject, styles=styles)
+
 @app.route('/generate', methods=['POST'])
 @login_required
 def generate_image():
     background_filename = request.form.get('background')
     character_filename = request.form.get('character')
+    subject = request.form.get('subject')
+    style = request.form.get('style')
 
-    if not background_filename or not character_filename:
+    if not background_filename or not character_filename or not subject or not style:
         return redirect(url_for('home'))
 
-    return render_template('generating.html', background=background_filename, character=character_filename)
+    return render_template('generating.html', background=background_filename, character=character_filename, subject=subject, style=style)
 
 @app.route('/process_image')
 @login_required
 def process_image():
     background_filename = request.args.get('background')
     character_filename = request.args.get('character')
+    subject = request.args.get('subject')
+    style = request.args.get('style')
 
     user_id = db.users.find_one({'username': current_user.id})['_id']
     
@@ -102,7 +124,7 @@ def process_image():
     background_data = background_doc['data']
     character_data = character_doc['data']
 
-    generated_image_data = generate(background_data, character_data)
+    generated_image_data = generate(background_data, character_data, subject, style)
     
     generated_image_doc = db.generated.insert_one({
         'user_id': user_id,
