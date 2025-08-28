@@ -44,7 +44,9 @@ def generate(background_image_data, character_image_data, subject, style):
         "Lego Style": "the Lego style, made entirely of plastic bricks, blocky shapes, visible stud textures, modular construction, bright primary colors, characters with iconic Lego faces and claw hands, 3D toy-like rendering."
     }
 
-    style_prompt = style_prompts.get(style, "a classic Disney animation style with bold lines, fairy-tale aesthetics, and lively expressions")
+    # The style selected by the user is used as a key to get the corresponding prompt.
+    # This directly uses the 'style' variable passed from the user's selection.
+    style_prompt = style_prompts[style]
     
     contents = [
         types.Content(

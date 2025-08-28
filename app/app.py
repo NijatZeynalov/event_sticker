@@ -23,6 +23,7 @@ app.config['GENERATED_FOLDER'] = 'generated'
 
 MONGO_URI='mongodb+srv://nijatzeynalov:Az6IfycMLZI8XubU@stickers.hgtfcj7.mongodb.net/?retryWrites=true&w=majority&appName=stickers'
 
+#p
 client = MongoClient(MONGO_URI)
 db = client.sticker
 
