@@ -25,7 +25,8 @@ def generate(background_image_data, character_image_data):
 
     # IMPORTANT: Your API key was leaked. Please go to your Google Cloud console
     # and revoke this key immediately.
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    api_key = 'AIzaSyARSAZLOPRkpLMf7EiiuNHCpZeZDYwvbqY'
+
     if not api_key:
         raise ValueError("No GOOGLE_API_KEY set for Google API")
 
