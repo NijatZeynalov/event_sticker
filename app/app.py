@@ -21,7 +21,8 @@ app.config['BACKGROUND_FOLDER'] = 'background'
 app.config['CHARACTER_FOLDER'] = 'character'
 app.config['GENERATED_FOLDER'] = 'generated'
 
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+MONGO_URI='mongodb+srv://nijatzeynalov:Az6IfycMLZI8XubU@stickers.hgtfcj7.mongodb.net/?retryWrites=true&w=majority&appName=stickers'
+
 client = MongoClient(MONGO_URI)
 db = client.sticker
 
