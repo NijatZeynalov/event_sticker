@@ -1,5 +1,5 @@
 Flask==2.3.2
-google-genai
+google-genai==1.30.0
 python-dotenv==1.0.0
 Flask-Login==0.6.2
 pymongo==4.3.3
