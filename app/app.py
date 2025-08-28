@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 from io import BytesIO
 from flask import send_file
 from dotenv import load_dotenv
-from .ai_modeling import generate
+from ai_modeling import generate
 
 # Construct the path to the .env file located in the parent directory
 dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
@@ -136,3 +136,6 @@ def character_image(filename):
     user_id = db.users.find_one({'username': current_user.id})['_id']
     image_doc = db.images.find_one({'user_id': user_id, 'filename': filename, 'type': 'character'})
     return send_file(BytesIO(image_doc['data']), mimetype=image_doc['content_type'])
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=8000)
