@@ -165,7 +165,7 @@ def process_image():
         # --- ƏN VACİB HİSSƏ: Hər hansı bir xətanı loglamaq ---
         app.logger.error(f"An unexpected error occurred in /process_image: {e}", exc_info=True)
         # exc_info=True bütün xəta izini (traceback) loga yazacaq
-        return "An internal error occurred during image processing. Please check the logs.", 500
+        return "An internal error occurred during image processing. {e} Please check the logs.", 500
         
 
 @app.route('/main')
