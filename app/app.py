@@ -6,7 +6,8 @@ from bson.objectid import ObjectId
 from io import BytesIO
 from flask import send_file
 from dotenv import load_dotenv
-from ai_modeling import generate
+from .ai_modeling import generate
+
 
 #
 dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
