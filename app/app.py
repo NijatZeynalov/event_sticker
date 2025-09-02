@@ -110,6 +110,14 @@ def generate_image():
 
     return render_template('generating.html', background=background_filename, character=character_filename, subject=subject, style=style)
 
+import logging
+from flask import jsonify
+
+# ... app konfiqurasiyasından sonra loglamanı aktivləşdirin
+logging.basicConfig(level=logging.INFO)
+
+# ...
+
 @app.route('/process_image')
 @login_required
 def process_image():
@@ -118,29 +126,46 @@ def process_image():
     subject = request.args.get('subject')
     style = request.args.get('style')
 
-    print(f"Starting process_image with: {background_filename}, {character_filename}, {subject}, {style}")
+    # logging.info() istifadə edərək Azure Log Stream-də görünməsini təmin edin
+    app.logger.info(f"Starting process_image for user {current_user.id} with: bg={background_filename}, char={character_filename}, sub={subject}, style={style}")
 
-    user_id = db.users.find_one({'username': current_user.id})['_id']
-    
-    background_doc = db.images.find_one({'user_id': user_id, 'filename': background_filename, 'type': 'background'})
-    character_doc = db.images.find_one({'user_id': user_id, 'filename': character_filename, 'type': 'character'})
+    try:
+        user_id = db.users.find_one({'username': current_user.id})['_id']
+        
+        background_doc = db.images.find_one({'user_id': user_id, 'filename': background_filename, 'type': 'background'})
+        character_doc = db.images.find_one({'user_id': user_id, 'filename': character_filename, 'type': 'character'})
 
-    print("Database queries completed")
+        # --- YOXLAMA 1: Şəkillər bazada mövcuddurmu? ---
+        if not background_doc:
+            app.logger.error(f"Background image not found in DB: {background_filename} for user {current_user.id}")
+            return "Error: Background image not found.", 404
+        if not character_doc:
+            app.logger.error(f"Character image not found in DB: {character_filename} for user {current_user.id}")
+            return "Error: Character image not found.", 404
 
-    background_data = background_doc['data']
-    character_data = character_doc['data']
+        app.logger.info("Database queries for images completed successfully.")
 
-    print("About to call generate() function...")
-    generated_image_data = generate(background_data, character_data, subject, style)
-    print("Generate() completed successfully")
-    
-    generated_image_doc = db.generated.insert_one({
-        'user_id': user_id,
-        'content_type': 'image/png',
-        'data': generated_image_data
-    })
-    
-    return redirect(url_for('main_page', generated_image_id=str(generated_image_doc.inserted_id)))
+        background_data = background_doc['data']
+        character_data = character_doc['data']
+
+        # --- YOXLAMA 2: generate() funksiyasını try-except bloku ilə çağırmaq ---
+        app.logger.info("About to call generate() function...")
+        generated_image_data = generate(background_data, character_data, subject, style)
+        app.logger.info("Generate() completed successfully.")
+        
+        generated_image_doc = db.generated.insert_one({
+            'user_id': user_id,
+            'content_type': 'image/png',
+            'data': generated_image_data
+        })
+        
+        return redirect(url_for('main_page', generated_image_id=str(generated_image_doc.inserted_id)))
+
+    except Exception as e:
+        # --- ƏN VACİB HİSSƏ: Hər hansı bir xətanı loglamaq ---
+        app.logger.error(f"An unexpected error occurred in /process_image: {e}", exc_info=True)
+        # exc_info=True bütün xəta izini (traceback) loga yazacaq
+        return "An internal error occurred during image processing. Please check the logs.", 500
         
 
 @app.route('/main')
