@@ -34,7 +34,7 @@ def generate(background_image_data, character_image_data, subject, style):
         api_key=api_key,
     )
 
-    model = "gemini-2.0-flash-preview-image-generation"
+    model = "gemini-2.5-flash-image-preview"
 
     style_prompts = {
         "ghibli": "the Ghibli style, painterly anime look, soft watercolor textures, lush natural environments, emotionally expressive characters with large eyes, subtle magical realism, nostalgic atmosphere, warm lighting, gentle brushwork.",
