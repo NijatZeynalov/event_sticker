@@ -113,28 +113,36 @@ def generate_image():
 @app.route('/process_image')
 @login_required
 def process_image():
-    background_filename = request.args.get('background')
-    character_filename = request.args.get('character')
-    subject = request.args.get('subject')
-    style = request.args.get('style')
+    try:
+        background_filename = request.args.get('background')
+        character_filename = request.args.get('character')
+        subject = request.args.get('subject')
+        style = request.args.get('style')
 
-    user_id = db.users.find_one({'username': current_user.id})['_id']
-    
-    background_doc = db.images.find_one({'user_id': user_id, 'filename': background_filename, 'type': 'background'})
-    character_doc = db.images.find_one({'user_id': user_id, 'filename': character_filename, 'type': 'character'})
+        print(f"Starting process_image with: {background_filename}, {character_filename}, {subject}, {style}")
 
-    background_data = background_doc['data']
-    character_data = character_doc['data']
+        user_id = db.users.find_one({'username': current_user.id})['_id']
+        
+        background_doc = db.images.find_one({'user_id': user_id, 'filename': background_filename, 'type': 'background'})
+        character_doc = db.images.find_one({'user_id': user_id, 'filename': character_filename, 'type': 'character'})
 
-    generated_image_data = generate(background_data, character_data, subject, style)
-    
-    generated_image_doc = db.generated.insert_one({
-        'user_id': user_id,
-        'content_type': 'image/png',
-        'data': generated_image_data
-    })
-    
-    return redirect(url_for('main_page', generated_image_id=str(generated_image_doc.inserted_id)))
+        print("Database queries completed")
+
+        background_data = background_doc['data']
+        character_data = character_doc['data']
+
+        print("About to call generate() function...")
+        generated_image_data = generate(background_data, character_data, subject, style)
+        print("Generate() completed successfully")
+        
+        generated_image_doc = db.generated.insert_one({
+            'user_id': user_id,
+            'content_type': 'image/png',
+            'data': generated_image_data
+        })
+        
+        return redirect(url_for('main_page', generated_image_id=str(generated_image_doc.inserted_id)))
+        
 
 @app.route('/main')
 @login_required
