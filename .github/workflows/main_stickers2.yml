@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - StickerAppNijat123
+name: Build and deploy Python app to Azure Web App - stickers2
 
 on:
   push:
@@ -56,6 +56,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'StickerAppNijat123'
+          app-name: 'stickers2'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3F246DF5D4E34BB4A4F2C17C41FD9094 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_19EF0F15FF804D30AF05935FEC8FA496 }}
