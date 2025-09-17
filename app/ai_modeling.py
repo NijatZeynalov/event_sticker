@@ -25,7 +25,7 @@ def generate(background_image_data, character_image_data, subject, style):
 
     # IMPORTANT: Your API key was leaked. Please go to your Google Cloud console
     # and revoke this key immediately.
-    api_key = 'AIzaSyARSAZLOPRkpLMf7EiiuNHCpZeZDYwvbqY'
+    api_key = 'YOUR_API_KEY'
 
     if not api_key:
         raise ValueError("No GOOGLE_API_KEY set for Google API")

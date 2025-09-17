@@ -21,7 +21,7 @@ app.config['BACKGROUND_FOLDER'] = 'background'
 app.config['CHARACTER_FOLDER'] = 'character'
 app.config['GENERATED_FOLDER'] = 'generated'
 
-MONGO_URI='mongodb+srv://nijatzeynalov:Az6IfycMLZI8XubU@stickers.hgtfcj7.mongodb.net/?retryWrites=true&w=majority&appName=stickers'
+MONGO_URI='mongodb+srv://nijatzeynalov:5Y7.ZkZw73TGfKt@stickers.hgtfcj7.mongodb.net/?retryWrites=true&w=majority&appName=stickers'
 
 #p
 client = MongoClient(MONGO_URI)
